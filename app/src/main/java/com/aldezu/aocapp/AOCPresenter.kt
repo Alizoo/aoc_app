@@ -41,8 +41,20 @@ object AOCPresenter {
         }
     }
 
+    /**
+     * .trim() - remove whitespace
+     * .split("-") - create list, breaking on split character
+     * .map { it.toInt() } - convert Strings to Ints
+     * val regex = """(/d)-(/d)-(/d)""".toRegex()
+     * val (a, b, c) = regex.find("1-2-3")?.destructured ?: error("Can't destructure!") -> a=1, b=2, c=3
+     * .substringBefore("-") - returns String before delimiter
+     * .substringAfter("-") - returns String after delimiter
+     * .removePrefix/removeSuffix
+     * .removeSurrounding
+     */
+
     fun viewsToAdd(context: Context): List<View> {
-        val inputLocation = "${context.filesDir}/input/day01.txt"
+        val inputLocation = "${context.filesDir}/input/day02.txt"
         val inputFile = File(inputLocation)
         val input = if (inputFile.exists()) {
             inputFile.readText()
@@ -54,27 +66,80 @@ object AOCPresenter {
         } else {
             listOf()
         }
-        var deeperCount = 0
+
+        /**
+         * Day 1
+         */
+//        var deeperCount = 0
 //        Part 1
-        for (i in 0 until (inputLines.count() - 1)) {
-            val previousValue = inputLines[i].toInt()
-            val nextValue = inputLines[i + 1].toInt()
-            if (nextValue > previousValue) {
-                deeperCount ++
-            }
-        }
+//        for (i in 0 until (inputLines.count() - 1)) {
+//            val previousValue = inputLines[i].toInt()
+//            val nextValue = inputLines[i + 1].toInt()
+//            if (nextValue > previousValue) {
+//                deeperCount ++
+//            }
+//        }
 //        Part 2
-        for (i in 2 until (inputLines.count() - 1)) {
-            val previousValue = inputLines[i].toInt() + inputLines[i - 1].toInt() + inputLines[i - 2].toInt()
-            val nextValue = inputLines[i + 1].toInt() + inputLines[i].toInt() + inputLines[i - 1].toInt()
-            if (nextValue  > previousValue) {
-                deeperCount ++
+//        for (i in 2 until (inputLines.count() - 1)) {
+//            val previousValue = inputLines[i].toInt() + inputLines[i - 1].toInt() + inputLines[i - 2].toInt()
+//            val nextValue = inputLines[i + 1].toInt() + inputLines[i].toInt() + inputLines[i - 1].toInt()
+//            if (nextValue  > previousValue) {
+//                deeperCount ++
+//            }
+//        }
+//        val listOfViews = mutableListOf<View>()
+//        listOfViews.add(
+//            AOCTextView(context).apply {
+//                text("Answer: $deeperCount")
+//                textColourRes(context, R.color.orange)
+//                textFontSize(24)
+//                textFontStyle(Font.AVALON, Style.DEMI)
+//                padding(30)
+//            }
+//        )
+
+        /**
+         * Day 2
+         */
+        var horPosition = 0
+        var depth = 0
+        var aim = 0
+        // Part 1
+//        inputLines.forEach { line ->
+//            val regex = """(\w*)\s(\d*)""".toRegex()
+//            val (a, b) = regex.find(line)?.destructured ?: error("Can't destructure!")
+//            when (a) {
+//                "forward" -> horPosition += b.toInt()
+//                "down" -> depth += b.toInt()
+//                "up" -> depth -= b.toInt()
+//            }
+//        }
+        // Part 2
+        inputLines.forEach { line ->
+            val regex = """(\w*)\s(\d*)""".toRegex()
+            val (a, b) = regex.find(line)?.destructured ?: error("Can't destructure!")
+                when (a) {
+                    "forward" -> {
+                        horPosition += b.toInt()
+                        depth += (aim * b.toInt())
+                    }
+                    "down" -> aim += b.toInt()
+                    "up" -> aim -= b.toInt()
             }
         }
         val listOfViews = mutableListOf<View>()
         listOfViews.add(
             AOCTextView(context).apply {
-                text("Answer: $deeperCount")
+                text("Final: Horizontal - $horPosition, Depth - $depth")
+                textColourRes(context, R.color.orange)
+                textFontSize(24)
+                textFontStyle(Font.AVALON, Style.DEMI)
+                padding(30)
+            }
+        )
+        listOfViews.add(
+            AOCTextView(context).apply {
+                text("Answer: ${horPosition * depth}")
                 textColourRes(context, R.color.orange)
                 textFontSize(24)
                 textFontStyle(Font.AVALON, Style.DEMI)
